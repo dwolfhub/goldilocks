@@ -29,21 +29,19 @@ def input_file_to_list(filename):
 
 
 def find_first_options(goldilocks, options):
-    chair = 'None found'
-    porridge = 'None found'
+    chair = None
+    porridge = None
     options_index = 0
     options_len = len(options)
 
-    while (chair == 'None found' or porridge == 'None found') \
-            and options_index < options_len:
-
+    while (not chair or not porridge) and options_index < options_len:
         try_chair = options[options_index]['chair']
         try_porridge = options[options_index]['porridge']
 
-        if try_chair > goldilocks['chair']:
+        if not chair and try_chair >= goldilocks['chair']:
             chair = try_chair
 
-        if try_porridge > goldilocks['porridge']:
+        if not porridge and try_porridge >= goldilocks['porridge']:
             porridge = try_porridge
 
         options_index += 1
