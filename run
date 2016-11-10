@@ -1,0 +1,76 @@
+#!/usr/bin/python
+import sys
+from getopt import GetoptError, getopt
+
+
+def print_syntax_and_exit():
+    print('run -i input.txt')
+    sys.exit(1)
+
+
+def input_file_to_list(filename):
+    goldilocks = None
+    options = []
+    with open(filename) as input_file:
+        for line in input_file:
+            line = line.split()
+
+            if not goldilocks:
+                goldilocks = {
+                    'chair': int(line[0]),
+                    'porridge': int(line[1]),
+                }
+            else:
+                options.append({
+                    'chair': int(line[0]),
+                    'porridge': int(line[1]),
+                })
+        return goldilocks, options
+
+
+def find_first_options(goldilocks, options):
+    chair = 'None found'
+    porridge = 'None found'
+    options_index = 0
+    options_len = len(options)
+
+    while (chair == 'None found' or porridge == 'None found') \
+            and options_index < options_len:
+
+        try_chair = options[options_index]['chair']
+        try_porridge = options[options_index]['porridge']
+
+        if try_chair > goldilocks['chair']:
+            chair = try_chair
+
+        if try_porridge > goldilocks['porridge']:
+            porridge = try_porridge
+
+        options_index += 1
+
+    return chair, porridge
+
+
+def main(args):
+    input_filename = None
+    opts = None
+
+    try:
+        opts = getopt(args, 'i:')
+    except GetoptError:
+        print_syntax_and_exit()
+
+    for key, val in opts[0]:
+        if key == '-i':
+            input_filename = val
+
+    if not input_filename:
+        print_syntax_and_exit()
+
+    goldilocks, options = input_file_to_list(input_filename)
+
+    print(find_first_options(goldilocks, options))
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
